@@ -3,7 +3,7 @@ use dotenv::dotenv;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::json;
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
@@ -49,16 +49,12 @@ fn encode_image(image_path: &str) -> String {
     encode(buffer)
 }
 
-#[tokio::main]
-async fn main() {
-    dotenv().ok();
-    let api_key = env::var("OPENAI_API_KEY").expect("API key not found");
-
-    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path.push("assets/audrow.jpeg");
-    let image_path = path.display().to_string();
-
-    let base64_image = encode_image(&image_path);
+async fn ask_openai(
+    api_key: &str,
+    question: &str,
+    image_path: &str,
+) -> Result<ApiResponse, reqwest::Error> {
+    let base64_image = encode_image(image_path);
 
     let mut headers = HeaderMap::new();
     headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
@@ -75,7 +71,7 @@ async fn main() {
                 "content": [
                     {
                         "type": "text",
-                        "text": "What’s in this image?"
+                        "text": question
                     },
                     {
                         "type": "image_url",
@@ -95,12 +91,30 @@ async fn main() {
         .headers(headers)
         .json(&payload)
         .send()
-        .await
-        .expect("Request failed");
+        .await?;
 
-    let parsed_response: ApiResponse = response.json().await.expect("Failed to parse JSON");
-    parsed_response.choices.iter().for_each(|choice| {
-        println!("{}", choice.message.content);
-    });
-    // println!("{:#?}", parsed_response);
+    response.json().await
+}
+
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
+    let api_key = env::var("OPENAI_API_KEY").expect("API key not found");
+
+    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    path.push("assets/audrow.jpeg");
+    let image_path = path.display().to_string();
+
+    let question = "What is in this image?"; // Your question
+
+    match ask_openai(&api_key, question, &image_path).await {
+        Ok(parsed_response) => {
+            parsed_response.choices.iter().for_each(|choice| {
+                println!("{}", choice.message.content);
+            });
+        }
+        Err(e) => {
+            eprintln!("Error: {}", e);
+        }
+    }
 }
