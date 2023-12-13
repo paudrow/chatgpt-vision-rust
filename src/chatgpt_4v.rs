@@ -2,13 +2,12 @@ use crate::ai::{AiImageChat, AiImageChatError, ImagePath};
 
 use async_trait::async_trait;
 use base64::encode;
-use dotenv::dotenv;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::collections::HashMap;
-use std::env;
+use std::error::Error;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
@@ -44,12 +43,11 @@ struct Usage {
 }
 
 // Function to encode the image
-fn encode_image(image_path: &PathBuf) -> String {
-    let mut file = File::open(image_path).expect("File not found");
+fn encode_image(image_path: &PathBuf) -> Result<String, Box<dyn Error>> {
+    let mut file = File::open(image_path)?;
     let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer)
-        .expect("Failed to read the file");
-    encode(buffer)
+    file.read_to_end(&mut buffer)?;
+    Ok(encode(buffer))
 }
 
 pub struct ChatGpt4v<'a> {
@@ -73,7 +71,8 @@ impl AiImageChat for ChatGpt4v<'_> {
         let image_url = match image_path {
             ImagePath::Url(url) => url.to_string(),
             ImagePath::File(path) => {
-                let base64_image = encode_image(path);
+                let base64_image =
+                    encode_image(path).map_err(|e| AiImageChatError::BadImagePath(e))?;
                 format!("data:image/jpeg;base64,{}", base64_image)
             }
         };
