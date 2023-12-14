@@ -2,7 +2,7 @@ mod action_picker;
 mod ai;
 mod chatgpt_4v;
 
-use crate::action_picker::{pick_action, Action};
+use crate::action_picker::{pick_action_from_image, Action};
 use crate::ai::{AiImageChat, ImagePath};
 use crate::chatgpt_4v::ChatGpt4v;
 
@@ -68,8 +68,8 @@ async fn main() {
     ];
 
     let chat_gpt4v = ChatGpt4v { api_key: &api_key };
-    let response = pick_action(&chat_gpt4v, &context, &actions, &image_path)
+    let response = pick_action_from_image(&chat_gpt4v, &context, &actions, &image_path)
         .await
         .unwrap();
-    println!("{:?}", response)
+    println!("{}", response);
 }

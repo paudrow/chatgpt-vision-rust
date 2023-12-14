@@ -1,0 +1,22 @@
+Instructions:
+
+Given the context and possible actions below, pick the most appropriate action to take.
+
+You'll see each action below listed like this:
+- action id: a detailed description of the action
+
+Your answer you give should be the action_id of the action you think is most appropriate.
+In the above example, the answer would be "action id", without the quotes.
+Do not include any other text in your reply.
+
+---
+
+Context:
+
+{{ context }}
+
+Possible Actions:
+
+{% for action in actions %}
+- {{ action.id }}: {{ action.description }}
+{% endfor %}

@@ -1,7 +1,7 @@
 use crate::ai::{AiImageChat, AiImageChatError, ImagePath};
 
 use async_trait::async_trait;
-use base64::encode;
+use base64::{engine::general_purpose, Engine as _};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -47,7 +47,7 @@ fn encode_image(image_path: &PathBuf) -> Result<String, Box<dyn Error>> {
     let mut file = File::open(image_path)?;
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer)?;
-    Ok(encode(buffer))
+    Ok(general_purpose::STANDARD.encode(buffer))
 }
 
 pub struct ChatGpt4v<'a> {
@@ -68,36 +68,7 @@ impl AiImageChat for ChatGpt4v<'_> {
             HeaderValue::from_str(&format!("Bearer {}", self.api_key)).unwrap(),
         );
 
-        let image_url = match image_path {
-            ImagePath::Url(url) => url.to_string(),
-            ImagePath::File(path) => {
-                let base64_image =
-                    encode_image(path).map_err(|e| AiImageChatError::BadImagePath(e))?;
-                format!("data:image/jpeg;base64,{}", base64_image)
-            }
-        };
-
-        let payload = json!({
-            "model": "gpt-4-vision-preview",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": question
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": image_url,
-                            }
-                        }
-                    ]
-                }
-            ],
-            "max_tokens": 300
-        });
+        let payload = make_payload(question, image_path)?;
 
         let client = Client::new();
         let response = client
@@ -128,4 +99,35 @@ impl AiImageChat for ChatGpt4v<'_> {
             .to_string();
         Ok(message)
     }
+}
+
+fn make_payload(text: &str, image_path: &ImagePath) -> Result<serde_json::Value, AiImageChatError> {
+    let image_url = match image_path {
+        ImagePath::Url(url) => url.to_string(),
+        ImagePath::File(path) => {
+            let base64_image = encode_image(path).map_err(|e| AiImageChatError::BadImagePath(e))?;
+            format!("data:image/jpeg;base64,{}", base64_image)
+        }
+    };
+    Ok(json!({
+        "model": "gpt-4-vision-preview",
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": text,
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": image_url,
+                        }
+                    }
+                ]
+            }
+        ],
+        "max_tokens": 300
+    }))
 }

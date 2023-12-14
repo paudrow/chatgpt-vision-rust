@@ -8,6 +8,7 @@ pub enum AiImageChatError {
     BadImagePath(Box<dyn Error>),
     RequestFailed(Box<dyn Error>),
     UnableToParseResponse(Box<dyn Error>),
+    FailedToGeneratePrompt(Box<dyn Error>),
 }
 
 pub enum ImagePath<'a> {
