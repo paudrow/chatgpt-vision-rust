@@ -6,7 +6,6 @@ use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::collections::HashMap;
 use std::error::Error;
 use std::fs::File;
 use std::io::Read;
@@ -14,17 +13,17 @@ use std::path::PathBuf;
 
 #[derive(Deserialize, Serialize, Debug)]
 struct ApiResponse {
-    choices: Vec<Choice>,
-    created: u64,
     id: String,
-    model: String,
     object: String,
+    created: u64,
+    model: String,
     usage: Usage,
+    choices: Vec<Choice>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 struct Choice {
-    finish_details: HashMap<String, String>,
+    finish_reason: String,
     index: u32,
     message: Message,
 }
@@ -37,8 +36,8 @@ struct Message {
 
 #[derive(Deserialize, Serialize, Debug)]
 struct Usage {
-    completion_tokens: u32,
     prompt_tokens: u32,
+    completion_tokens: u32,
     total_tokens: u32,
 }
 
@@ -78,6 +77,13 @@ impl AiImageChat for ChatGpt4v<'_> {
             .send()
             .await
             .map_err(|e| AiImageChatError::RequestFailed(Box::new(e)))?;
+
+        let status = response.status();
+        if status.is_client_error() || status.is_server_error() {
+            return Err(AiImageChatError::RequestFailed(Box::new(
+                std::io::Error::new(std::io::ErrorKind::Other, "Request failed"),
+            )));
+        }
 
         let parsed_message: ApiResponse = response
             .json()

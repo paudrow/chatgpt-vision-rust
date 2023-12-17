@@ -3,12 +3,11 @@ mod ai;
 mod chatgpt_4v;
 
 use crate::action_picker::{pick_action_from_image, Action};
-use crate::ai::{AiImageChat, ImagePath};
+use crate::ai::ImagePath;
 use crate::chatgpt_4v::ChatGpt4v;
 
 use dotenv::dotenv;
 use std::env;
-use std::path::PathBuf;
 use url::Url;
 
 #[tokio::main]
