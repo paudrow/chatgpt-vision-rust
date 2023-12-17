@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./pick_action_from_image/Cargo.toml"
+    ]
+}
