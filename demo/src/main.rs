@@ -1,5 +1,5 @@
-use pick_action_from_image::{pick_action_from_image, Action, ImagePath};
 use pick_action_from_image::models::ChatGpt4v;
+use pick_action_from_image::{pick_action_from_image, Action, ImagePath};
 
 use dotenv::dotenv;
 use std::env;

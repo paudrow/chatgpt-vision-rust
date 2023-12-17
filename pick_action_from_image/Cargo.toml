@@ -1,7 +1,16 @@
 [package]
 name = "pick_action_from_image"
 version = "0.1.0"
+authors = ["Audrow Nash <audrow@hey.com>"]
+categories = ["image processing", "llm", "ai"]
 edition = "2021"
+description = "Pick an action from an image."
+license = "MIT"
+repository = "https://github.com/paudrow/chatgpt-vision-rust"
+include = [
+    "src/**/*",
+    "templates/**/*",
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

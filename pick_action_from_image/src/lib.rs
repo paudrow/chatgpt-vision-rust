@@ -5,6 +5,7 @@ mod chatgpt_4v;
 pub use crate::action_picker::{pick_action_from_image, Action};
 pub use crate::ai::{AiImageChat, AiImageChatError, ImagePath};
 
+/// Models that have the `AiImageChat` trait implemented.
 pub mod models {
     pub use crate::chatgpt_4v::ChatGpt4v;
 }
