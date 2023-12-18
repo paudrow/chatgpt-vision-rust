@@ -1,5 +1,9 @@
 # Pick actions from an image
 
+[<img alt="crates.io" src="https://img.shields.io/crates/v/pick_action_from_image.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/syn)
+[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-pick_action_from_image-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/syn)
+[![Rust CI](https://github.com/paudrow/chatgpt-vision-rust/actions/workflows/ci.yaml/badge.svg)](https://github.com/paudrow/chatgpt-vision-rust/actions/workflows/ci.yaml)
+
 Pick the best action from a list of actions given an image and context.
 
 This can be used for other AI models, but currently only has a model for ChatGPT-4V.
