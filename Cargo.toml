@@ -1,6 +1,6 @@
 [package]
 name = "pick_action_from_image"
-version = "0.1.6"
+version = "1.0.0"
 authors = ["Audrow Nash <audrow@hey.com>"]
 categories = ["API bindings", "Asynchronous", "Robotics", "Computer Vision"]
 keywords = ["image-processing", "llm", "ai", "chatgpt"]
