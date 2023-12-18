@@ -1,8 +1,9 @@
 # Pick actions from an image
 
+[<img alt="github" src="https://img.shields.io/badge/github-paudrow/chatgpt vision rust-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/paudrow/chatgpt-vision-rust)
 [<img alt="crates.io" src="https://img.shields.io/crates/v/pick_action_from_image.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/syn)
 [<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-pick_action_from_image-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/syn)
-[![Rust CI](https://github.com/paudrow/chatgpt-vision-rust/actions/workflows/ci.yaml/badge.svg)](https://github.com/paudrow/chatgpt-vision-rust/actions/workflows/ci.yaml)
+[<img alt="build status" src="https://img.shields.io/github/actions/workflow/status/paudrow/chatgpt-vision-rust/ci.yaml?branch=main&style=for-the-badge" height="20">](https://github.com/paudrow/chatgpt-vision-rust/actions/workflows/ci.yaml?query=branch%3Amain)
 
 Pick the best action from a list of actions given an image and context.
 
