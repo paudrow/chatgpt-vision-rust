@@ -3,9 +3,9 @@ name = "pick_action_from_image"
 version = "0.1.0"
 authors = ["Audrow Nash <audrow@hey.com>"]
 categories = ["API bindings", "Asynchronous", "Robotics", "Computer Vision"]
-keywords = ["image processing", "llm", "ai", "chatgpt"]
-edition = "2021"
+keywords = ["image-processing", "llm", "ai", "chatgpt"]
 description = "Pick an action from an image."
+edition = "2021"
 license = "MIT"
 repository = "https://github.com/paudrow/chatgpt-vision-rust"
 include = [
@@ -15,6 +15,7 @@ include = [
     "/templates/**",
     "/README.md",
 ]
+documentation = "https://docs.rs/pick_action_from_image"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
